@@ -253,7 +253,6 @@ function FinanceSummary() {
     <Block>
       <RowHead>
         <HeadLeft>
-          <strong>{monthName}</strong>
           <MonthSelect
             value={monthName}
             onChange={(e) => setMonthIndex(months.indexOf(e.target.value))}
