@@ -286,7 +286,7 @@ const ModalCliente = ({ mode, data, onClose, onSave }) => {
               name: v.name || "",
               year: v.year || "",
               fuel: v.fuel || "",
-              chassis: v.chassis || "",
+              chassi: v.chassi || "",
               km: v.km || "",
             });
           }
@@ -352,7 +352,7 @@ const ModalCliente = ({ mode, data, onClose, onSave }) => {
               name: dados.modelo || "",
               year: dados.ano_modelo || "",
               fuel: dados.combustivel || "",
-              chassis: dados.chassi || "",
+              chassi: dados.chassi || "",
               km: updated[index].km || "",
               _fetched: true,
             };
@@ -657,9 +657,9 @@ const ModalCliente = ({ mode, data, onClose, onSave }) => {
                   <Label>Chassi</Label>
                   <Input
                     disabled={isView}
-                    value={v.chassis || ""}
+                    value={v.chassi || ""}
                     onChange={(e) =>
-                      handleVehicleChange(i, "chassis", e.target.value)
+                      handleVehicleChange(i, "chassi", e.target.value)
                     }
                   />
                 </Field>
