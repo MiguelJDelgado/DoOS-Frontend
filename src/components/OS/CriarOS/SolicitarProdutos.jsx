@@ -205,7 +205,7 @@ const AddButton = styled.button`
   }
 `;
 
-function SolicitarProdutoModal({ onClose, onAdd, serviceOrderId, serviceOrderCode }) {
+function SolicitarProdutoModal({ onClose, serviceOrderId, serviceOrderCode }) {
   const [produtos, setProdutos] = useState([
     { produtoNome: "", produtoId: "", quantidade: 1, observacao: "" },
   ]);
@@ -260,40 +260,31 @@ function SolicitarProdutoModal({ onClose, onAdd, serviceOrderId, serviceOrderCod
   const removerProduto = (index) => setProdutos(produtos.filter((_, i) => i !== index));
 
   const handleAdd = async () => {
-    if (produtos.some((p) => !p.produtoNome))
-      return alert("Preencha todos os produtos!");
+  if (produtos.some((p) => !p.produtoNome))
+    return alert("Preencha todos os produtos!");
 
-    try {
-      const payload = {
-        serviceOrderId,
-        serviceOrderCode,
-        status: "pending",
-        products: produtos.map((p) => ({
-          name: p.produtoNome,
-          quantity: p.quantidade, 
-          productId: p.produtoId || undefined,
-          code: p.code || undefined,
-        })),
-      };
+  try {
+    const payload = {
+      serviceOrderId,
+      serviceOrderCode,
+      status: "pending",
+      products: produtos.map((p) => ({
+        name: p.produtoNome,
+        quantity: p.quantidade,
+        productId: p.produtoId || undefined,
+        code: p.code || undefined,
+      })),
+    };
 
-      await createSolicitacao(payload);
+    await createSolicitacao(payload);
 
-      onAdd(
-        produtos.map((p) => ({
-          productId: p.produtoId || null,
-          code: p.code || "",
-          name: p.produtoNome,
-          quantity: p.quantidade,
-          observation: p.observacao || "", 
-        }))
-      );
+    onClose();  // apenas fecha o modal, mais nada
+  } catch (err) {
+    console.error("Erro ao criar solicitação:", err);
+    alert("Erro ao criar solicitação.");
+  }
+};
 
-      onClose();
-    } catch (err) {
-      console.error("Erro ao criar solicitação:", err);
-      alert("Erro ao criar solicitação.");
-    }
-  };
 
 
   return (

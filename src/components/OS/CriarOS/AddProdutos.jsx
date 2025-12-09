@@ -271,6 +271,25 @@ function ProdutosSection({ products, setProducts, isLocked, serviceOrderId, serv
     return todosProdutos.filter((p) => p.name?.toLowerCase().includes(lower));
   };
 
+  useEffect(() => {
+    const produtosCorrigidos = products.map((p) => {
+    const salePrice = Number(p.salePrice) || 0;
+    const quantity = Number(p.quantity) || 1;
+    const totalValue = salePrice * quantity;
+    return {
+      ...p,
+      salePrice,
+      quantity,
+      totalValue,
+    };
+  });
+
+  if (JSON.stringify(produtosCorrigidos) !== JSON.stringify(products)) {
+    setProducts(produtosCorrigidos);
+  }
+}, [products, setProducts]);
+
+
   return (
     <Section disabled={isLocked}>
       <SectionHeader>
@@ -285,7 +304,7 @@ function ProdutosSection({ products, setProducts, isLocked, serviceOrderId, serv
       {modalAberto && (
         <SolicitarProdutoModal
           onClose={() => setModalAberto(false)}
-          onAdd={(novoProduto) => setProducts([...products, novoProduto])}
+          onAdd={() => {}}
           serviceOrderId={serviceOrderId}
           serviceOrderCode={serviceOrderCode}
         />
