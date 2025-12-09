@@ -42,9 +42,7 @@ const Input = styled.input`
   border-radius: 6px;
   border: 1px solid #d5dde3;
   width: 90%;
-
   background: ${({ disabled }) => (disabled ? "#e9edf0" : "#fff")};
-
   &:focus {
     outline: none;
     border-color: #999;
@@ -57,16 +55,14 @@ const TextArea = styled.textarea`
   padding: 40px;
   border-radius: 6px;
   border: 1px solid #d5dde3;
-  width: 100%;
+  width: 40%;
   min-height: 80px;
   resize: vertical;
-
   background: ${({ disabled }) => (disabled ? "#e9edf0" : "#fff")};
-
   &:focus {
     outline: none;
     border-color: #999;
-    background: #fff;
+    background: #fff";
   }
 `;
 
@@ -100,7 +96,6 @@ const CriarColaborador = ({
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
   const firstInputRef = useRef(null);
 
   useEffect(() => {
@@ -147,9 +142,34 @@ const CriarColaborador = ({
     }
   }, [form.cep]);
 
+  const formatCPF = (v) =>
+    v
+      .replace(/\D/g, "")
+      .slice(0, 11)
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+  const formatCEP = (v) =>
+    v.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2");
+
+  const formatTelefone = (v) =>
+    v
+      .replace(/\D/g, "")
+      .slice(0, 11)
+      .replace(/^(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{5})(\d)/, "$1-$2");
+
   const handleChange = (field) => (e) => {
     if (isView) return;
-    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+
+    let value = e.target.value;
+
+    if (field === "cpf") value = formatCPF(value);
+    if (field === "cep") value = formatCEP(value);
+    if (field === "telefone") value = formatTelefone(value);
+
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const validate = () => {
@@ -170,19 +190,21 @@ const CriarColaborador = ({
     if (!validate()) return;
     setLoading(true);
 
-    const payload = {
-      name: form.nome,
-      cpf: form.cpf,
-      position: form.cargo,
-      cep: form.cep,
-      address: form.endereco,
-      number: form.numero,
-      city: form.municipio,
-      state: form.uf,
-      email: form.email,
-      cellphone: form.telefone,
-      notes: form.anotacao,
-    };
+  const payload = {
+    name: form.nome,
+    cpf: form.cpf.replace(/\D/g, ""),
+    position: form.cargo,
+    cep: form.cep.replace(/\D/g, ""),
+    address: form.endereco,
+    number: form.numero,
+    city: form.municipio,
+    state: form.uf,
+    email: form.email,
+    cellphone: form.telefone,
+    notes: form.anotacao,
+  };
+
+
 
     try {
       if (isEdit) {
@@ -233,6 +255,7 @@ const CriarColaborador = ({
               value={form.cpf}
               onChange={handleChange("cpf")}
               placeholder="000.000.000-00"
+              maxLength={14}
               disabled={loading || isView}
             />
             {errors.cpf && <ErrorMsg>{errors.cpf}</ErrorMsg>}
@@ -257,6 +280,7 @@ const CriarColaborador = ({
               value={form.cep}
               onChange={handleChange("cep")}
               placeholder="00000-000"
+              maxLength={9}
               disabled={loading || isView}
             />
           </Field>
@@ -310,6 +334,7 @@ const CriarColaborador = ({
               value={form.telefone}
               onChange={handleChange("telefone")}
               placeholder="(11) 99999-9999"
+              maxLength={15}
               disabled={loading || isView}
             />
             {errors.telefone && <ErrorMsg>{errors.telefone}</ErrorMsg>}

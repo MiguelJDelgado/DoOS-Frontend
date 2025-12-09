@@ -138,10 +138,10 @@ const TelaClientes = () => {
       setSuccessMessage("Cliente excluído com sucesso!");
 
     } catch (error) {
-      console.log("🔥 ERRO COMPLETO:", error);
-  console.log("🔥 error.response:", error.response);
-  console.log("🔥 error.request:", error.request);
-  console.log("🔥 error.message:", error.message);
+      console.log("ERRO COMPLETO:", error);
+  console.log("error.response:", error.response);
+  console.log("error.request:", error.request);
+  console.log("error.message:", error.message);
 
       console.error("Erro ao excluir cliente:", error);
 

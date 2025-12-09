@@ -97,6 +97,42 @@ const DropdownItem = styled.li`
   }
 `;
 
+// ------------------
+// MÁSCARAS
+// ------------------
+const maskCpfCnpj = (value) => {
+  const digits = value.replace(/\D/g, "");
+
+  if (digits.length <= 11) {
+    return digits
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d)/, "$1.$2")
+      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  }
+
+  return digits
+    .replace(/(\d{2})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1.$2")
+    .replace(/(\d{3})(\d)/, "$1/$2")
+    .replace(/(\d{4})(\d{1,2})$/, "$1-$2");
+};
+
+const maskTelefone = (value) => {
+  const digits = value.replace(/\D/g, "");
+
+  if (digits.length <= 10) {
+    return digits
+      .replace(/(\d{2})(\d)/, "($1) $2")
+      .replace(/(\d{4})(\d)/, "$1-$2");
+  }
+
+  return digits
+    .replace(/(\d{2})(\d)/, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2");
+};
+
+// ------------------
+
 const ClienteOS = ({ clientId, setClientId, isLocked }) => {
   const [clientes, setClientes] = useState([]);
   const [filteredClientes, setFilteredClientes] = useState([]);
@@ -148,8 +184,8 @@ const ClienteOS = ({ clientId, setClientId, isLocked }) => {
         setBusca(client.name || "");
         setDadosCliente({
           nome: client.name || "",
-          cpfCnpj: client.cpf || client.cnpj || "",
-          telefone: client.cellphone || client.phone || "",
+          cpfCnpj: maskCpfCnpj(client.cpf || client.cnpj || ""),
+          telefone: maskTelefone(client.cellphone || client.phone || ""),
           email: client.email || "",
           endereco: client.address || client.street || "",
           numero: client.number || client.addressNumber || "",
@@ -166,13 +202,15 @@ const ClienteOS = ({ clientId, setClientId, isLocked }) => {
 
   const handleSelectCliente = (cliente) => {
     if (isLocked) return;
+
     setClienteSelecionado(cliente);
     setClientId(cliente._id);
     setBusca(cliente.name || "");
+
     setDadosCliente({
       nome: cliente.name || "",
-      cpfCnpj: cliente.cpf || cliente.cnpj || "",
-      telefone: cliente.cellphone || cliente.phone || "",
+      cpfCnpj: maskCpfCnpj(cliente.cpf || cliente.cnpj || ""),
+      telefone: maskTelefone(cliente.cellphone || cliente.phone || ""),
       email: cliente.email || "",
       endereco: cliente.address || cliente.street || "",
       numero: cliente.number || cliente.addressNumber || "",
