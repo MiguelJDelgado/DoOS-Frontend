@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import * as API from '../../services/CadastroService';
+import { createUser } from '../../services/CadastroService'; 
 
 const Container = styled.div`
   background-color: #f9f8fb;
@@ -117,38 +117,44 @@ const Cadastro = () => {
 
   async function handleCadastro(e) {
     e.preventDefault();
-    setErro('');
+    setErro("");
 
     if (senha !== repetirSenha) {
-      setErro('As senhas não coincidem');
+      setErro("As senhas não coincidem");
       return;
     }
+
+    const roleMap = {
+      administrador: "admin",
+      gerente: "manager",
+      usuario: "employer",
+    };
 
     const novoUsuario = {
       name: nome,
       email,
       password: senha,
       cellphone: telefone,
-      role
+      role: roleMap[role],
     };
 
     try {
-      const res = await API.createUser(novoUsuario);
-      const data = await res.json();
+      const token = localStorage.getItem("token"); 
+      const data = await createUser(novoUsuario, token);
 
-      if (!res.ok) {
-        setErro(data.erro || 'Erro ao cadastrar usuário');
+      if (data?._id) {
+        if (role === "administrador") {
+          navigate("/dashboard");
+        } else {
+          navigate("/configurações");
+        }
         return;
       }
 
-      if (role === 'administrador') {
-        navigate('/dashboard');
-      } else {
-        navigate('/configurações');
-      }
-
-    } catch {
-      setErro('Erro de conexão com o servidor');
+      setErro("Erro inesperado ao criar usuário");
+    } catch (error) {
+      console.error(error);
+      setErro("Erro ao cadastrar usuário");
     }
   }
 

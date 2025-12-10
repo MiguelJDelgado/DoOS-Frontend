@@ -1,6 +1,6 @@
 // src/services/userService.js
 
-const API_URL = import.meta.env.VITE_API + "auth/users";
+const API_URL = import.meta.env.VITE_API + "/auth/users";
 
 // Buscar todos
 export const getUsers = async () => {
@@ -17,13 +17,17 @@ export const getUserById = async (id) => {
 };
 
 // Criar
-export const createUser = async (userData) => {
+export const createUser = async (userData, token) => {
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
     body: JSON.stringify(userData),
   });
   if (!res.ok) throw new Error("Erro ao criar usuário");
   return res.json();
 };
+
 
