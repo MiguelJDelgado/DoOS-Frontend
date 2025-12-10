@@ -753,23 +753,27 @@ function Os({
                       </Td>
                       <Td>{formatCurrencyBRL(order.valor)}</Td>
                       <Td>
-                        {order.status !== "finalized" && (
+                        {order.status === "completed" && (
                           <ActionButton title="Aprovar" onClick={() => onApprove(order)}>
                             <IconImage src={aprovarIcon} alt="Aprovar" />
                           </ActionButton>
                         )}
+
                         <ActionButton title="Imprimir" onClick={() => handlePrint(order)}>
                           <IconImage src={imprimirIcon} alt="Imprimir" />
                         </ActionButton>
+
                         <ActionButton
                           title="Editar"
                           onClick={() => navigate("/criar-ordem-de-serviço", { state: { orderId: order.id, mode: "edit" } })}
                         >
                           <IconImage src={editarIcon} alt="Editar" />
                         </ActionButton>
+
                         <ActionButton title="Excluir" onClick={() => handleDelete(order)}>
                           <IconImage src={excluirIcon} alt="Excluir" />
                         </ActionButton>
+                        
                         <ActionButton title="Visualizar" onClick={() => handleView(order)}>
                           <IconImage src={olhoIcon} alt="Visualizar" />
                         </ActionButton>
